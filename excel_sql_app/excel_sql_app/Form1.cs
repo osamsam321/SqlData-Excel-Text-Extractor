@@ -207,7 +207,7 @@ namespace excel_sql_app
                     tempSb.Append(sb[i]);
                 }
                
-                if(sb[i] == ',' || i == sb.Length - 1)
+                if((sb[i] == ',' || i == sb.Length - 1) && tempSb.Length > 0 )
                 {
                     if (tempSb[0] == '\'' || tempSb[0] == '\"')
                     {
@@ -416,44 +416,59 @@ namespace excel_sql_app
         private void executeBtn_Click(object sender, EventArgs e)
         {
             bool mainSqlReady = false;
-            StringBuilder mainSqlText;
+            StringBuilder mainSqlSbText;
             StringBuilder dataText;
             
-            if(dataSqlInclusionReady())
+            if(dataSqlInclusionReady() )
             {
                 StartPerformanceTimer();
-                mainSqlText = new StringBuilder(mainSqlRichBox.Text);
-                int group = getGroupInputValue();
-                if (group == 0)
+                mainSqlSbText = new StringBuilder(mainSqlRichBox.Text);
+                dataText = new StringBuilder(dataRichBox.Text);
+                int groupLevel = getGroupInputValue();
+                if (groupLevel == 0)
                 {
-                   
-                    mainSqlText.Remove(selectColorIndex, dataSyntax.Length);
-                    mainSqlText.Insert(selectColorIndex, dataRichBox.Text);
-                    mainSqlRichBox.Text = mainSqlText.ToString();
+
+                    mainSqlSbText.Remove(selectColorIndex, dataSyntax.Length);
+                    mainSqlSbText.Insert(selectColorIndex, dataRichBox.Text);
+                    mainSqlRichBox.Text = mainSqlSbText.ToString();
                 }
                 else
                 {
-                                    
+                                   
                     int groupCounter = 0;
-                    string[] tempGroup =  dataRichBox.Text.Split(",");
-                    for (int i = 0; i < dataRichBox.Text.Length;i++)
-                    {
-                             
-                        if ( i % group == 0)
+                    int layerCounter = -1;
+                    var a = dataRichBox.Lines[0];
+                    mainSqlSbText.Remove(selectColorIndex, dataSyntax.Length);
+                    StringBuilder groupSb = new StringBuilder();
+                     
+                    for (int i = 0; i < dataText.Length;i++)
+                     {
+                        if(groupCounter == 0 && i != 0)
                         {
-                            string groupTmpStr = string.Empty;
-                            StringBuilder groupSB = new StringBuilder(mainSqlRichBox.Text);
-                            for (int j = i; j < i + group; j++ )
-                            {
-                                groupTmpStr = tempGroup[j] + string.Empty;
-                            }
-                            mainSqlRichBox.AppendText("------------" + Math.Floor((double) i / group) + "------------");
-                            groupSB.Remove(selectColorIndex, dataSyntax.Length);
-                            groupSB.Append(groupTmpStr, 2, dataSyntax.Length);
-                            mainSqlRichBox.AppendText(groupSB.ToString());
-                            mainSqlRichBox.AppendText(" ----------- end of group");
+                           
                         }
-                    }
+                        
+                        if (dataText[i] == ',')
+                        {
+                            groupCounter++;
+                        }
+                         
+                        groupSb.Append(dataText[i]);
+                        
+                        if (groupCounter == groupLevel)
+                        {
+                            groupSb.Remove(groupSb.Length - 1, 1);
+                            groupSb.Append(")");
+                            layerCounter++;
+                            mainSqlSbText.Append("------------" + layerCounter + "------------" + "\n");                         
+                            mainSqlSbText.Append(groupSb);
+                            mainSqlSbText.Append("\n" + "------------" + "End of Group" + "------------" + "\n");                          
+                            groupSb.Clear();
+                            groupCounter = 0;
+                            groupSb = (i < dataText.Length - 1) ? groupSb.Append("(") : groupSb.Append("");                      
+                        }
+                     }
+                    mainSqlRichBox.AppendText(mainSqlSbText.ToString());
                 }
                 ClosePerformanceTimer("Exported in ");
  
@@ -509,15 +524,7 @@ namespace excel_sql_app
             
             else
             {
-                if(int.Parse(value) > 0)
-                {
-                    closeSysMsgTitle();
-                }
-                else
-                {
-                    updateSysMsgTitle("Please enter a postive Number greator then zero", Color.Red);
-                }
-                            
+                closeSysMsgTitle();                          
             }
         }
 
@@ -544,10 +551,44 @@ namespace excel_sql_app
                 colTextBox.Text = string.Empty;
                 updateSysMsgTitle("Please enter a postive Number", Color.Red);               
             }
-
             else
             {
-                closeSysMsgTitle();
+                if (int.Parse(value) > 0)
+                {
+                    closeSysMsgTitle();
+                }
+                else
+                {
+                    updateSysMsgTitle("Please enter a postive Number greator then zero", Color.Red);
+                }
+            }
+       
+        }
+
+        private void dataRichBox_TextChanged_1(object sender, EventArgs e)
+        {
+            Debug.WriteLine("data richbox text change method ref");
+            if (dataRichBox.Text.Length > 0)
+            {
+               
+                executeBtn.Enabled = true;
+            }
+            else
+            {
+                executeBtn.Enabled = false;
+            }
+        }
+
+        private void mainSqlRichBox_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void mainSqlRichBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            if(e.Button == MouseButtons.Right)
+            {
+                
             }
         }
     }

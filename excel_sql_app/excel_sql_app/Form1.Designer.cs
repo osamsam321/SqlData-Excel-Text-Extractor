@@ -200,11 +200,13 @@
             // executeBtn
             // 
             this.executeBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(100)))), ((int)(((byte)(110)))));
+            this.executeBtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.executeBtn.Enabled = false;
             this.executeBtn.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.executeBtn.Location = new System.Drawing.Point(630, 193);
             this.executeBtn.Name = "executeBtn";
             this.executeBtn.Size = new System.Drawing.Size(118, 40);
-            this.executeBtn.TabIndex = 3;
+            this.executeBtn.TabIndex = 4;
             this.executeBtn.Text = "Execute";
             this.executeBtn.UseVisualStyleBackColor = false;
             this.executeBtn.Click += new System.EventHandler(this.executeBtn_Click);
@@ -216,7 +218,7 @@
             this.resetBtn.Location = new System.Drawing.Point(781, 193);
             this.resetBtn.Name = "resetBtn";
             this.resetBtn.Size = new System.Drawing.Size(113, 40);
-            this.resetBtn.TabIndex = 3;
+            this.resetBtn.TabIndex = 4;
             this.resetBtn.Text = "Reset";
             this.resetBtn.UseVisualStyleBackColor = false;
             this.resetBtn.Click += new System.EventHandler(this.resetBtn_Click);
@@ -274,7 +276,10 @@
             // 
             // mainSqlRichBox
             // 
+            this.mainSqlRichBox.AutoWordSelection = true;
             this.mainSqlRichBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.mainSqlRichBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mainSqlRichBox.EnableAutoDragDrop = true;
             this.mainSqlRichBox.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.mainSqlRichBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(200)))));
             this.mainSqlRichBox.Location = new System.Drawing.Point(0, 324);
@@ -283,11 +288,14 @@
             this.mainSqlRichBox.Size = new System.Drawing.Size(497, 427);
             this.mainSqlRichBox.TabIndex = 1;
             this.mainSqlRichBox.Text = "Select Test * from (??) \n\n";
+            this.mainSqlRichBox.Click += new System.EventHandler(this.mainSqlRichBox_Click);
+            this.mainSqlRichBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mainSqlRichBox_MouseClick);
             this.mainSqlRichBox.TextChanged += new System.EventHandler(this.mainSqlTextBox_TextChanged);
             // 
             // dataRichBox
             // 
             this.dataRichBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.dataRichBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.dataRichBox.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.dataRichBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(200)))));
             this.dataRichBox.Location = new System.Drawing.Point(495, 324);
@@ -296,6 +304,7 @@
             this.dataRichBox.Size = new System.Drawing.Size(487, 427);
             this.dataRichBox.TabIndex = 16;
             this.dataRichBox.Text = "All your data ...";
+            this.dataRichBox.TextChanged += new System.EventHandler(this.dataRichBox_TextChanged_1);
             // 
             // performanceCheckTimer
             // 
@@ -324,7 +333,7 @@
             this.uniqueCheckBox.Location = new System.Drawing.Point(515, 194);
             this.uniqueCheckBox.Name = "uniqueCheckBox";
             this.uniqueCheckBox.Size = new System.Drawing.Size(93, 40);
-            this.uniqueCheckBox.TabIndex = 19;
+            this.uniqueCheckBox.TabIndex = 3;
             this.uniqueCheckBox.Text = "Unqiue";
             this.uniqueCheckBox.UseVisualStyleBackColor = true;
             this.uniqueCheckBox.CheckedChanged += new System.EventHandler(this.uniqueCheckBox_CheckedChanged);
