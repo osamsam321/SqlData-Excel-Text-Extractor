@@ -18,12 +18,11 @@ namespace excel_sql_app
         private static ExcelReader er = null;
         public ExcelReader(Uri path)
         {
-             mainForm = new Form1();
             this.path = path;
 
         }
   
-        public HashSet<string> ExecuteData()
+        public HashSet<string> ExecuteDataHash()
         {
            
             HashSet<string> excelDataSet = new HashSet<string>();
@@ -60,9 +59,58 @@ namespace excel_sql_app
             return excelDataSet;
 
         }
-    
-      
-        private bool IsReadAble(Uri filePath)
+        
+        public StringBuilder ExecuteDataSb(int cell)
+        {
+            StringBuilder finalSb = null;
+            try
+            {
+                 finalSb = new StringBuilder();
+                var package = new ExcelPackage(new FileInfo(path.OriginalString));
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                var worksheet = package.Workbook.Worksheets[0];
+                string dataListStr = string.Empty;
+                Debug.WriteLine("row range: " + worksheet.Dimension.Rows);
+                Debug.WriteLine("Data: ");
+                StringBuilder tempSb = new StringBuilder();
+
+
+                for (int i = 1; i <= worksheet.Dimension.Rows; i++)
+                {
+                    if (worksheet.Cells[i, cell] != null)
+                    {
+                        string tmp = (string)worksheet.Cells[i, 1].Value;
+                        tempSb.Append(tmp);
+                        if (tempSb[0] == '\'' || tempSb[0] == '\"')
+                        {
+                            tempSb.Remove(0, 1);
+                        }
+                        if (tempSb[tempSb.Length - 1] == '\'' || tempSb[tempSb.Length - 1] == '\"')
+                        {
+                            tempSb.Remove(tempSb.Length - 1, 1);
+                        }
+                        if (i < worksheet.Dimension.Rows)
+                        {
+                            tempSb.Append(",");
+                        }
+                        finalSb.Append(tempSb);
+                        tempSb.Clear();
+                    }
+                }
+            }
+
+
+            catch (IOException e)
+            {
+                finalSb = null;
+            }
+            catch (Exception e)
+            {
+                finalSb = null;
+            }
+            return finalSb;
+   }
+private bool IsReadAble(Uri filePath)
         {
             string ext = Path.GetExtension(filePath.OriginalString);
             if (ext.Equals(".xlsx"))

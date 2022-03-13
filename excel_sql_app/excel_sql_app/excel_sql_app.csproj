@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.15.0" />
     <PackageReference Include="EPPlus" Version="5.8.7" />
+    <PackageReference Include="HashedWheelTimer" Version="1.0.3" />
     <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1000" />
     <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
   </ItemGroup>

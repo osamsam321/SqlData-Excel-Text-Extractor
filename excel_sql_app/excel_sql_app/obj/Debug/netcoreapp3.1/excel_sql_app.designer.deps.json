@@ -40,6 +40,14 @@
           }
         }
       },
+      "HashedWheelTimer/1.0.3": {
+        "runtime": {
+          "lib/netstandard2.0/HashedWheelTimer.dll": {
+            "assemblyVersion": "1.0.3.0",
+            "fileVersion": "1.0.3.0"
+          }
+        }
+      },
       "Microsoft.Extensions.Configuration/3.1.10": {
         "dependencies": {
           "Microsoft.Extensions.Configuration.Abstractions": "3.1.10"
@@ -1080,6 +1088,13 @@
       "sha512": "sha512-6MAA1ZlGWf17tX/zrk80J1YZ8Q2DlThIa0MwD2B99hxuxE7Qud8AHUXWV4MmwS0gN24RVP3CRC+YhROarynipg==",
       "path": "epplus/5.8.7",
       "hashPath": "epplus.5.8.7.nupkg.sha512"
+    },
+    "HashedWheelTimer/1.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0I7T1Mycz5PBXK1hB17Z1wyQXsdaocuAbcAQzFg/Hv2Wk49XbE6QakKGHfq9Nvag7Sxjur83rDB54fA6xVsvLA==",
+      "path": "hashedwheeltimer/1.0.3",
+      "hashPath": "hashedwheeltimer.1.0.3.nupkg.sha512"
     },
     "Microsoft.Extensions.Configuration/3.1.10": {
       "type": "package",

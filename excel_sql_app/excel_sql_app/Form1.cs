@@ -15,13 +15,17 @@ using System.Text.RegularExpressions;
 using System.Collections;
 using System.Collections;
 
+
 namespace excel_sql_app
 {
    
     public partial class Form1 : Form
     {
         bool excelDatainitated = false;
+        System.Threading.Timer performanceTime;
         int selectColorIndex = -1;
+        long timeExecuted;
+        long lastTime;
         Dictionary<string, List<int>> keywordD;
         readonly string dataSyntax = "(??)";
 
@@ -39,7 +43,8 @@ namespace excel_sql_app
         private void Form1_Load(object sender, EventArgs e)
         {
             keywordD = new Dictionary<string, List<int>>();
-
+             timeExecuted = 0L;
+            lastTime = 0L;
             string[] sqlKeyWords = {"AND","ALTER TABLE","AS","BETWEEN","CREATE DATABASE",
                 "CREATE TABLE","CREATE INDEX","DELETE","GRANT","REVOKE","COMMIT","ROLLBACK",
                 "SAVEPOINT","DROP DATABASE","DROP INDEX","DROP TABLE","EXISTS","GROUP BY",
@@ -85,56 +90,77 @@ namespace excel_sql_app
         }
         private void DdPanelCont_DragDrop(object sender, DragEventArgs e)
         {
-            if( e.Data.GetDataPresent(DataFormats.FileDrop))
+           
+            if ( e.Data.GetDataPresent(DataFormats.FileDrop))
              {
                 string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
                 /*FIlePathLabel.Text = files.First();*/
             }
             else if (e.Data.GetDataPresent(DataFormats.Text))
             {
+                StartPerformanceTimer();
                 string a = (string) e.Data.GetData(DataFormats.Text, false);
                 string result1 = a.Replace("\r\n", ",");
                 StringBuilder sbFinal = new StringBuilder(result1);              
                 sbFinal.Remove(sbFinal.Length - 1, 1);
-                string[] arr = sbFinal.ToString().Split(",");
-                List<string> list = new List<string>(arr);
-                if(list.Count > 0)
+                /*  string[] arr = sbFinal.ToString().Split(",");
+                  List<string> list = new List<string>(arr);*/
+                if (sbFinal.Length > 0)
                 {
-                    FillDataBox(list);
-                    excelDatainitated = true ;
+                    FillDataBox(sbFinal);
+                    excelDatainitated = true;
                 }
-           
+                ClosePerformanceTimer("read in ");
             }
 
+        }
+
+        private void performanceTimerRun(object state)
+        {          
+            timeExecuted = DateTime.UtcNow.Millisecond - lastTime;
+        }
+        private int GetCellOrZero()
+        {
+            return (string.IsNullOrEmpty(colTextBox.Text)) ? 1 : int.Parse(colTextBox.Text);
         }
         private void ddPanelCont_DragOver(object sender, DragEventArgs e)
         {
                 if (!excelDatainitated && e.Data.GetDataPresent(DataFormats.FileDrop))
                 {
-                    string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
+                StartPerformanceTimer();
+                string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
                     e.Effect = DragDropEffects.All;
                     string path = files.First();
                     FIlePathLabel.Text = path;
-                    HashSet<string> excelDataSet = executeExcelReader(new Uri(path));
-                    if(excelDataSet == null)
+                /*HashSet<string> excelDataSet = executeExcelReader(new Uri(path));*/
+                int cell = GetCellOrZero();
+                StringBuilder sb = ExcelReader.getInstance(new Uri(path)).ExecuteDataSb(cell);
+                 /*   if(excelDataSet == null)
                     {
                          updateSysMsgTitle("Please close your Excel app or place an .xlsx file", Color.Red);
-                    }
+                    }*/
+                    if(sb == null)
+                    {
+                        updateSysMsgTitle("Please close your Excel app or place an .xlsx file", Color.Red);
+                     }
                     else
                     {
                         closeSysMsgTitle();
-                        List<string> excelValues = new List<string>(excelDataSet);
-                        FillDataBox(excelValues);
+                    /* List<string> excelValues = new List<string>(excelDataSet);*/
+                    /*FillDataBox(excelValues);*/
+                    FillDataBox(sb);
                         excelDatainitated = true;
                     }
-                
-                }
+
+                ClosePerformanceTimer("read in ");
+            }
          
         }
 
 
         private void FillDataBox(List<string> excelDataList )
         {
+           
             StringBuilder excelData = new StringBuilder("(");
             string last = excelDataList[excelDataList.Count - 1];
             foreach(string data in excelDataList)
@@ -159,22 +185,29 @@ namespace excel_sql_app
             }
 
             dataRichBox.Text = excelData.ToString();
+           
         }
 
         private void FillDataBox(StringBuilder sb)
         {
+            if(uniqueCheckBox.Checked)
+            {
+                Debug.WriteLine("inside of checked condition");
+                HashSet<string> s = new HashSet<string>(sb.ToString().Split(","));
+                sb = new StringBuilder(string.Join(',', s));
+                uniqueCheckBox.Checked = false;
+            }
             StringBuilder excelData = new StringBuilder("(");
             StringBuilder tempSb = new StringBuilder();
 
             for(int i = 0; i < sb.Length;i++)
-            {
-                
+            {             
                 if(sb[i] != ',')
                 {
                     tempSb.Append(sb[i]);
                 }
                
-                else if(sb[i] == ',' || i == sb.Length - 1)
+                if(sb[i] == ',' || i == sb.Length - 1)
                 {
                     if (tempSb[0] == '\'' || tempSb[0] == '\"')
                     {
@@ -186,10 +219,13 @@ namespace excel_sql_app
                     }
 
                     if (i == sb.Length - 1)
+                    {
                         excelData.Append("'" + tempSb + "'" + " )");
-                   
+                    }
                     else
+                    {
                         excelData.Append("'" + tempSb + "'" + ", ");
+                    }
 
                     tempSb = new StringBuilder();
 
@@ -199,12 +235,13 @@ namespace excel_sql_app
             }
 
             dataRichBox.Text = excelData.ToString();
+          
         }
         private HashSet<string> executeExcelReader(Uri path) {
             ExcelReader er = ExcelReader.getInstance(path);
 
-            return er.ExecuteData();
-           
+            return er.ExecuteDataHash();
+          
         }
         private void panel2_DragEnter(object sender, DragEventArgs e)
         {
@@ -327,7 +364,19 @@ namespace excel_sql_app
             mainSqlRichBox.Focus();
             mainSqlRichBox.DeselectAll();
         }
-
+        private void StartPerformanceTimer()
+        {
+            timeExecuted = 0;
+            lastTime = DateTime.UtcNow.Millisecond;
+            performanceTime = new System.Threading.Timer(new TimerCallback(performanceTimerRun),
+                           null, 1, 1);
+        }
+        private void ClosePerformanceTimer(string msg)
+        {
+            performanceTime.Dispose();
+            performanceLabel.Text = (msg + timeExecuted + " MS");
+            performanceLabel.Visible = true;
+        }
         private void label1_Click_1(object sender, EventArgs e)
         {
 
@@ -372,6 +421,7 @@ namespace excel_sql_app
             
             if(dataSqlInclusionReady())
             {
+                StartPerformanceTimer();
                 mainSqlText = new StringBuilder(mainSqlRichBox.Text);
                 int group = getGroupInputValue();
                 if (group == 0)
@@ -405,7 +455,7 @@ namespace excel_sql_app
                         }
                     }
                 }
-               
+                ClosePerformanceTimer("Exported in ");
  
             }
 
@@ -429,6 +479,7 @@ namespace excel_sql_app
             excelDatainitated = false;
 
             Form1 NewForm = new Form1();
+            int timeExecutedMilli = 0;
             NewForm.Show();
             this.Dispose(false);
         }
@@ -446,22 +497,57 @@ namespace excel_sql_app
         {
            
         }
-        private void MainSqlRichBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void GroupTextBox_TextChanged(object sender, EventArgs e)
         {
             string value = groupTextBox.Text;
             if (!Regex.IsMatch(value, @"\d") )
             {
-                updateSysMsgTitle("Please enter a postive Number", Color.Red);
+                groupTextBox.Text = string.Empty;
+                updateSysMsgTitle("Please enter a postive Number greator then zero", Color.Red);          
             }
             
             else
             {
-                closeSysMsgTitle();             
+                if(int.Parse(value) > 0)
+                {
+                    closeSysMsgTitle();
+                }
+                else
+                {
+                    updateSysMsgTitle("Please enter a postive Number greator then zero", Color.Red);
+                }
+                            
+            }
+        }
+
+        private void performanceCheckTimer_Tick(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void performanceLabel_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void uniqueCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void ColTextBox_TextChanged(object sender, EventArgs e)
+        {
+            string value = colTextBox.Text;
+            if (!Regex.IsMatch(value, @"\d"))
+            {
+                colTextBox.Text = string.Empty;
+                updateSysMsgTitle("Please enter a postive Number", Color.Red);               
+            }
+
+            else
+            {
+                closeSysMsgTitle();
             }
         }
     }

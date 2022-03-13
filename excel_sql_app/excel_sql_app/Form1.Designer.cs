@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.ddPanelCont = new System.Windows.Forms.Panel();
             this.ddLabel = new System.Windows.Forms.Label();
             this.mainAreaTitle = new System.Windows.Forms.Label();
@@ -42,12 +43,15 @@
             this.customSQLLabel = new System.Windows.Forms.Label();
             this.executeBtn = new System.Windows.Forms.Button();
             this.resetBtn = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.colTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.FIlePathLabel = new System.Windows.Forms.Label();
             this.systemMSGLabel = new System.Windows.Forms.Label();
             this.mainSqlRichBox = new System.Windows.Forms.RichTextBox();
             this.dataRichBox = new System.Windows.Forms.RichTextBox();
+            this.performanceCheckTimer = new System.Windows.Forms.Timer(this.components);
+            this.performanceLabel = new System.Windows.Forms.Label();
+            this.uniqueCheckBox = new System.Windows.Forms.CheckBox();
             this.ddPanelCont.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.contentTitlePane.SuspendLayout();
@@ -197,7 +201,7 @@
             // 
             this.executeBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(100)))), ((int)(((byte)(110)))));
             this.executeBtn.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.executeBtn.Location = new System.Drawing.Point(564, 193);
+            this.executeBtn.Location = new System.Drawing.Point(630, 193);
             this.executeBtn.Name = "executeBtn";
             this.executeBtn.Size = new System.Drawing.Size(118, 40);
             this.executeBtn.TabIndex = 3;
@@ -209,7 +213,7 @@
             // 
             this.resetBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(140)))), ((int)(((byte)(50)))), ((int)(((byte)(70)))));
             this.resetBtn.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.resetBtn.Location = new System.Drawing.Point(728, 193);
+            this.resetBtn.Location = new System.Drawing.Point(781, 193);
             this.resetBtn.Name = "resetBtn";
             this.resetBtn.Size = new System.Drawing.Size(113, 40);
             this.resetBtn.TabIndex = 3;
@@ -217,16 +221,16 @@
             this.resetBtn.UseVisualStyleBackColor = false;
             this.resetBtn.Click += new System.EventHandler(this.resetBtn_Click);
             // 
-            // textBox2
+            // colTextBox
             // 
-            this.textBox2.BackColor = System.Drawing.Color.SeaShell;
-            this.textBox2.Location = new System.Drawing.Point(390, 200);
-            this.textBox2.MaxLength = 10;
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(95, 30);
-            this.textBox2.TabIndex = 2;
-            this.textBox2.TextChanged += new System.EventHandler(this.MainSqlRichBox_TextChanged);
+            this.colTextBox.BackColor = System.Drawing.Color.SeaShell;
+            this.colTextBox.Location = new System.Drawing.Point(390, 200);
+            this.colTextBox.MaxLength = 2;
+            this.colTextBox.Multiline = true;
+            this.colTextBox.Name = "colTextBox";
+            this.colTextBox.Size = new System.Drawing.Size(95, 30);
+            this.colTextBox.TabIndex = 2;
+            this.colTextBox.TextChanged += new System.EventHandler(this.ColTextBox_TextChanged);
             // 
             // label1
             // 
@@ -235,9 +239,9 @@
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
             this.label1.Location = new System.Drawing.Point(295, 203);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(89, 20);
+            this.label1.Size = new System.Drawing.Size(82, 20);
             this.label1.TabIndex = 12;
-            this.label1.Text = "Excel Row #";
+            this.label1.Text = "Excel Col #";
             this.label1.Click += new System.EventHandler(this.label1_Click_2);
             // 
             // FIlePathLabel
@@ -246,11 +250,11 @@
             this.FIlePathLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.FIlePathLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.FIlePathLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(190)))), ((int)(((byte)(100)))));
-            this.FIlePathLabel.Location = new System.Drawing.Point(450, 9);
+            this.FIlePathLabel.Location = new System.Drawing.Point(472, 9);
             this.FIlePathLabel.Name = "FIlePathLabel";
-            this.FIlePathLabel.Size = new System.Drawing.Size(101, 18);
+            this.FIlePathLabel.Size = new System.Drawing.Size(42, 18);
             this.FIlePathLabel.TabIndex = 13;
-            this.FIlePathLabel.Text = "Path to Folder";
+            this.FIlePathLabel.Text = "Path ";
             // 
             // systemMSGLabel
             // 
@@ -293,18 +297,52 @@
             this.dataRichBox.TabIndex = 16;
             this.dataRichBox.Text = "All your data ...";
             // 
+            // performanceCheckTimer
+            // 
+            this.performanceCheckTimer.Interval = 1;
+            this.performanceCheckTimer.Tick += new System.EventHandler(this.performanceCheckTimer_Tick);
+            // 
+            // performanceLabel
+            // 
+            this.performanceLabel.AutoSize = true;
+            this.performanceLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.performanceLabel.ForeColor = System.Drawing.Color.GreenYellow;
+            this.performanceLabel.Location = new System.Drawing.Point(832, 97);
+            this.performanceLabel.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+            this.performanceLabel.MaximumSize = new System.Drawing.Size(90, 40);
+            this.performanceLabel.Name = "performanceLabel";
+            this.performanceLabel.Size = new System.Drawing.Size(75, 32);
+            this.performanceLabel.TabIndex = 18;
+            this.performanceLabel.Text = "Completed in";
+            this.performanceLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.performanceLabel.Visible = false;
+            this.performanceLabel.Click += new System.EventHandler(this.performanceLabel_Click);
+            // 
+            // uniqueCheckBox
+            // 
+            this.uniqueCheckBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
+            this.uniqueCheckBox.Location = new System.Drawing.Point(515, 194);
+            this.uniqueCheckBox.Name = "uniqueCheckBox";
+            this.uniqueCheckBox.Size = new System.Drawing.Size(93, 40);
+            this.uniqueCheckBox.TabIndex = 19;
+            this.uniqueCheckBox.Text = "Unqiue";
+            this.uniqueCheckBox.UseVisualStyleBackColor = true;
+            this.uniqueCheckBox.CheckedChanged += new System.EventHandler(this.uniqueCheckBox_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.ClientSize = new System.Drawing.Size(982, 753);
+            this.Controls.Add(this.uniqueCheckBox);
+            this.Controls.Add(this.performanceLabel);
             this.Controls.Add(this.dataRichBox);
             this.Controls.Add(this.mainSqlRichBox);
             this.Controls.Add(this.systemMSGLabel);
             this.Controls.Add(this.FIlePathLabel);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.colTextBox);
             this.Controls.Add(this.resetBtn);
             this.Controls.Add(this.executeBtn);
             this.Controls.Add(this.contentSubTitlePane);
@@ -352,6 +390,11 @@
         public  System.Windows.Forms.Label systemMSGLabel;
         private System.Windows.Forms.RichTextBox mainSqlRichBox;
         private System.Windows.Forms.RichTextBox dataRichBox;
+        private System.Windows.Forms.Timer performanceCheckTimer;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label performanceLabel;
+        private System.Windows.Forms.CheckBox uniqueCheckBox;
+        private System.Windows.Forms.TextBox colTextBox;
     }
 }
 

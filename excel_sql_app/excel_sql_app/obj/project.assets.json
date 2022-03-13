@@ -38,6 +38,15 @@
           "lib/netstandard2.1/EPPlus.dll": {}
         }
       },
+      "HashedWheelTimer/1.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/HashedWheelTimer.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/HashedWheelTimer.dll": {}
+        }
+      },
       "Microsoft.Extensions.Configuration/3.1.10": {
         "type": "package",
         "dependencies": {
@@ -1250,6 +1259,18 @@
         "lib/netstandard2.1/EPPlus.xml",
         "license.md",
         "readme.txt"
+      ]
+    },
+    "HashedWheelTimer/1.0.3": {
+      "sha512": "0I7T1Mycz5PBXK1hB17Z1wyQXsdaocuAbcAQzFg/Hv2Wk49XbE6QakKGHfq9Nvag7Sxjur83rDB54fA6xVsvLA==",
+      "type": "package",
+      "path": "hashedwheeltimer/1.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "hashedwheeltimer.1.0.3.nupkg.sha512",
+        "hashedwheeltimer.nuspec",
+        "lib/netstandard2.0/HashedWheelTimer.dll"
       ]
     },
     "Microsoft.Extensions.Configuration/3.1.10": {
@@ -4493,6 +4514,7 @@
     ".NETCoreApp,Version=v3.1": [
       "DocumentFormat.OpenXml >= 2.15.0",
       "EPPlus >= 5.8.7",
+      "HashedWheelTimer >= 1.0.3",
       "Microsoft.Office.Interop.Excel >= 15.0.4795.1000",
       "System.Collections.NonGeneric >= 4.3.0"
     ]
@@ -4543,6 +4565,10 @@
           "EPPlus": {
             "target": "Package",
             "version": "[5.8.7, )"
+          },
+          "HashedWheelTimer": {
+            "target": "Package",
+            "version": "[1.0.3, )"
           },
           "Microsoft.Office.Interop.Excel": {
             "target": "Package",
