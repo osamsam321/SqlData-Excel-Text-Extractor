@@ -79,7 +79,7 @@ namespace excel_sql_app
                 {
                     if (worksheet.Cells[i, cell] != null)
                     {
-                        string tmp = (string)worksheet.Cells[i, 1].Value;
+                        string tmp = (string)worksheet.Cells[i, cell].Value;
                         tempSb.Append(tmp);
                         if (tempSb[0] == '\'' || tempSb[0] == '\"')
                         {

@@ -97,11 +97,11 @@
             this.mainAreaTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.mainAreaTitle.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.mainAreaTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
-            this.mainAreaTitle.Location = new System.Drawing.Point(428, -1);
+            this.mainAreaTitle.Location = new System.Drawing.Point(457, -1);
             this.mainAreaTitle.Name = "mainAreaTitle";
-            this.mainAreaTitle.Size = new System.Drawing.Size(111, 20);
+            this.mainAreaTitle.Size = new System.Drawing.Size(72, 20);
             this.mainAreaTitle.TabIndex = 1;
-            this.mainAreaTitle.Text = " Content Pane";
+            this.mainAreaTitle.Text = " Content";
             this.mainAreaTitle.Click += new System.EventHandler(this.mainAreaTitle_Click);
             // 
             // groupTextBox

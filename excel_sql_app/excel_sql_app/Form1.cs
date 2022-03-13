@@ -119,7 +119,7 @@ namespace excel_sql_app
         {          
             timeExecuted = DateTime.UtcNow.Millisecond - lastTime;
         }
-        private int GetCellOrZero()
+        private int GetCellOrOne()
         {
             return (string.IsNullOrEmpty(colTextBox.Text)) ? 1 : int.Parse(colTextBox.Text);
         }
@@ -133,7 +133,7 @@ namespace excel_sql_app
                     string path = files.First();
                     FIlePathLabel.Text = path;
                 /*HashSet<string> excelDataSet = executeExcelReader(new Uri(path));*/
-                int cell = GetCellOrZero();
+                int cell = GetCellOrOne();
                 StringBuilder sb = ExcelReader.getInstance(new Uri(path)).ExecuteDataSb(cell);
                  /*   if(excelDataSet == null)
                     {
@@ -141,7 +141,7 @@ namespace excel_sql_app
                     }*/
                     if(sb == null)
                     {
-                        updateSysMsgTitle("Please close your Excel app or place an .xlsx file", Color.Red);
+                        updateSysMsgTitle("Please close your Excel app, place an .xlsx file and add correct values", Color.Red);
                      }
                     else
                     {
