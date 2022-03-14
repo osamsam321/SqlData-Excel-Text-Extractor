@@ -48,14 +48,20 @@
             this.FIlePathLabel = new System.Windows.Forms.Label();
             this.systemMSGLabel = new System.Windows.Forms.Label();
             this.mainSqlRichBox = new System.Windows.Forms.RichTextBox();
+            this.mainMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyToolStripMenuItemCopy = new System.Windows.Forms.ToolStripMenuItem();
+            this.cutToolStripMenuItemCut = new System.Windows.Forms.ToolStripMenuItem();
+            this.pasteToolStripMenuItemPaste = new System.Windows.Forms.ToolStripMenuItem();
             this.dataRichBox = new System.Windows.Forms.RichTextBox();
             this.performanceCheckTimer = new System.Windows.Forms.Timer(this.components);
             this.performanceLabel = new System.Windows.Forms.Label();
             this.uniqueCheckBox = new System.Windows.Forms.CheckBox();
+            this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ddPanelCont.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.contentTitlePane.SuspendLayout();
             this.contentSubTitlePane.SuspendLayout();
+            this.mainMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // ddPanelCont
@@ -279,6 +285,7 @@
             this.mainSqlRichBox.AutoWordSelection = true;
             this.mainSqlRichBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.mainSqlRichBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mainSqlRichBox.ContextMenuStrip = this.mainMenuStrip;
             this.mainSqlRichBox.EnableAutoDragDrop = true;
             this.mainSqlRichBox.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.mainSqlRichBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(200)))));
@@ -289,8 +296,44 @@
             this.mainSqlRichBox.TabIndex = 1;
             this.mainSqlRichBox.Text = "Select Test * from (??) \n\n";
             this.mainSqlRichBox.Click += new System.EventHandler(this.mainSqlRichBox_Click);
-            this.mainSqlRichBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mainSqlRichBox_MouseClick);
             this.mainSqlRichBox.TextChanged += new System.EventHandler(this.mainSqlTextBox_TextChanged);
+            this.mainSqlRichBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mainMenuStrip_MouseDown);
+            // 
+            // mainMenuStrip
+            // 
+            this.mainMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.mainMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyToolStripMenuItemCopy,
+            this.cutToolStripMenuItemCut,
+            this.pasteToolStripMenuItemPaste,
+            this.selectAllToolStripMenuItem});
+            this.mainMenuStrip.Name = "mainMenuStrip";
+            this.mainMenuStrip.Size = new System.Drawing.Size(211, 128);
+            this.mainMenuStrip.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mainMenuStrip_MouseDown);
+            // 
+            // copyToolStripMenuItemCopy
+            // 
+            this.copyToolStripMenuItemCopy.Name = "copyToolStripMenuItemCopy";
+            this.copyToolStripMenuItemCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.copyToolStripMenuItemCopy.Size = new System.Drawing.Size(210, 24);
+            this.copyToolStripMenuItemCopy.Text = "Copy";
+            this.copyToolStripMenuItemCopy.Click += new System.EventHandler(this.copyToolStripMenuItemCopy_Click);
+            // 
+            // cutToolStripMenuItemCut
+            // 
+            this.cutToolStripMenuItemCut.Name = "cutToolStripMenuItemCut";
+            this.cutToolStripMenuItemCut.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            this.cutToolStripMenuItemCut.Size = new System.Drawing.Size(210, 24);
+            this.cutToolStripMenuItemCut.Text = "Cut";
+            this.cutToolStripMenuItemCut.Click += new System.EventHandler(this.cutToolStripMenuItemCut_Click);
+            // 
+            // pasteToolStripMenuItemPaste
+            // 
+            this.pasteToolStripMenuItemPaste.Name = "pasteToolStripMenuItemPaste";
+            this.pasteToolStripMenuItemPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
+            this.pasteToolStripMenuItemPaste.Size = new System.Drawing.Size(210, 24);
+            this.pasteToolStripMenuItemPaste.Text = "Paste";
+            this.pasteToolStripMenuItemPaste.Click += new System.EventHandler(this.pasteToolStripMenuItemPaste_Click);
             // 
             // dataRichBox
             // 
@@ -338,6 +381,14 @@
             this.uniqueCheckBox.UseVisualStyleBackColor = true;
             this.uniqueCheckBox.CheckedChanged += new System.EventHandler(this.uniqueCheckBox_CheckedChanged);
             // 
+            // selectAllToolStripMenuItem
+            // 
+            this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
+            this.selectAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.selectAllToolStripMenuItem.Text = "Select All";
+            this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -364,6 +415,7 @@
             this.MaximumSize = new System.Drawing.Size(1000, 800);
             this.Name = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseClick);
             this.ddPanelCont.ResumeLayout(false);
             this.ddPanelCont.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
@@ -372,6 +424,7 @@
             this.contentTitlePane.PerformLayout();
             this.contentSubTitlePane.ResumeLayout(false);
             this.contentSubTitlePane.PerformLayout();
+            this.mainMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -404,6 +457,14 @@
         private System.Windows.Forms.Label performanceLabel;
         private System.Windows.Forms.CheckBox uniqueCheckBox;
         private System.Windows.Forms.TextBox colTextBox;
+        private System.Windows.Forms.ContextMenuStrip mainMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItemCopy;
+        private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItemCut;
+        private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItemPaste;
+        private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
     }
 }
 

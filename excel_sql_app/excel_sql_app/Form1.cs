@@ -197,7 +197,7 @@ namespace excel_sql_app
                 sb = new StringBuilder(string.Join(',', s));
                 uniqueCheckBox.Checked = false;
             }
-            StringBuilder excelData = new StringBuilder("(");
+            StringBuilder excelData = new StringBuilder("");
             StringBuilder tempSb = new StringBuilder();
 
             for(int i = 0; i < sb.Length;i++)
@@ -220,7 +220,7 @@ namespace excel_sql_app
 
                     if (i == sb.Length - 1)
                     {
-                        excelData.Append("'" + tempSb + "'" + " )");
+                        excelData.Append("'" + tempSb + "'" );
                     }
                     else
                     {
@@ -418,16 +418,21 @@ namespace excel_sql_app
             bool mainSqlReady = false;
             StringBuilder mainSqlSbText;
             StringBuilder dataText;
-            
+            StringBuilder orginalSqlSbText;
+            StringBuilder dataListSb;
+            StringBuilder groupSb;
             if(dataSqlInclusionReady() )
             {
                 StartPerformanceTimer();
-                mainSqlSbText = new StringBuilder(mainSqlRichBox.Text);
+                orginalSqlSbText = new StringBuilder(mainSqlRichBox.Text);
+                orginalSqlSbText.Remove(selectColorIndex + 1, dataSyntax.Length - 2);
+                mainSqlSbText = new StringBuilder("");
                 dataText = new StringBuilder(dataRichBox.Text);
+                dataListSb = new StringBuilder();
                 int groupLevel = getGroupInputValue();
                 if (groupLevel == 0)
                 {
-
+                    mainSqlSbText = new StringBuilder(mainSqlRichBox.Text);
                     mainSqlSbText.Remove(selectColorIndex, dataSyntax.Length);
                     mainSqlSbText.Insert(selectColorIndex, dataRichBox.Text);
                     mainSqlRichBox.Text = mainSqlSbText.ToString();
@@ -438,36 +443,37 @@ namespace excel_sql_app
                     int groupCounter = 0;
                     int layerCounter = -1;
                     var a = dataRichBox.Lines[0];
-                    mainSqlSbText.Remove(selectColorIndex, dataSyntax.Length);
-                    StringBuilder groupSb = new StringBuilder();
-                     
+                    
+                     groupSb = new StringBuilder();
+                    
                     for (int i = 0; i < dataText.Length;i++)
                      {
-                        if(groupCounter == 0 && i != 0)
-                        {
-                           
-                        }
                         
                         if (dataText[i] == ',')
                         {
                             groupCounter++;
                         }
-                         
-                        groupSb.Append(dataText[i]);
+
+                        dataListSb.Append(dataText[i]);
                         
                         if (groupCounter == groupLevel)
                         {
-                            groupSb.Remove(groupSb.Length - 1, 1);
-                            groupSb.Append(")");
                             layerCounter++;
-                            mainSqlSbText.Append("------------" + layerCounter + "------------" + "\n");                         
-                            mainSqlSbText.Append(groupSb);
-                            mainSqlSbText.Append("\n" + "------------" + "End of Group" + "------------" + "\n");                          
-                            groupSb.Clear();
+                           
+                            dataListSb.Remove(dataListSb.Length - 1, 1);                                                   
+                            groupSb.Append("\n" + "------------" + layerCounter + "------------" + "\n");
+                            groupSb.Append(orginalSqlSbText + "\n");
+                            groupSb.Insert((groupSb.Length - orginalSqlSbText.Length) + selectColorIndex , dataListSb);
+                            groupSb.Append("\n" + "------------" + "End of Group" + "------------" + "\n");
+                            mainSqlSbText.Append(groupSb + "\n");                                                     
                             groupCounter = 0;
-                            groupSb = (i < dataText.Length - 1) ? groupSb.Append("(") : groupSb.Append("");                      
+                            dataListSb.Clear();
+                            groupSb.Clear();
+                           
+                                                
                         }
                      }
+                    mainSqlRichBox.Clear();
                     mainSqlRichBox.AppendText(mainSqlSbText.ToString());
                 }
                 ClosePerformanceTimer("Exported in ");
@@ -581,15 +587,45 @@ namespace excel_sql_app
 
         private void mainSqlRichBox_Click(object sender, EventArgs e)
         {
+ 
+        }
+
+
+
+        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        {
             
         }
 
-        private void mainSqlRichBox_MouseClick(object sender, MouseEventArgs e)
+        private void copyToolStripMenuItemCopy_Click(object sender, EventArgs e)
         {
-            if(e.Button == MouseButtons.Right)
+            mainSqlRichBox.Copy();
+        }
+
+        private void cutToolStripMenuItemCut_Click(object sender, EventArgs e)
+        {
+            mainSqlRichBox.Cut();
+        }
+
+        private void pasteToolStripMenuItemPaste_Click(object sender, EventArgs e)
+        {
             {
-                
+                System.Windows.Forms.Label tempLabel = new System.Windows.Forms.Label();
+                tempLabel.Text = Clipboard.GetText();
+                tempLabel.Font = mainSqlRichBox.Font;
+                Clipboard.SetText(tempLabel.Text);
             }
+            mainSqlRichBox.Paste();
+        }
+
+        private void mainMenuStrip_MouseDown(object sender, MouseEventArgs e)
+        {
+           
+        }
+
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mainSqlRichBox.SelectAll();
         }
     }
 }
